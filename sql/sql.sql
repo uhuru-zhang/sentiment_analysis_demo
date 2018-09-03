@@ -34,7 +34,7 @@ CREATE TABLE `article` (
   `updated_at` int(11) NOT NULL,
   `extra` longtext,
   PRIMARY KEY (`series_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +58,7 @@ CREATE TABLE `auth_group` (
   `name` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +86,7 @@ CREATE TABLE `auth_group_permissions` (
   KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
   CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +113,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,7 +147,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +175,7 @@ CREATE TABLE `auth_user_groups` (
   KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`),
   CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
   CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -203,7 +203,7 @@ CREATE TABLE `auth_user_user_permissions` (
   KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`),
   CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,7 +236,7 @@ CREATE TABLE `django_admin_log` (
   KEY `django_admin_log_user_id_c564eba6_fk_auth_user_id` (`user_id`),
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -261,7 +261,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -287,7 +287,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,7 +296,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-09-03 13:54:11.904932'),(2,'auth','0001_initial','2018-09-03 13:54:12.164011'),(3,'admin','0001_initial','2018-09-03 13:54:12.219523'),(4,'admin','0002_logentry_remove_auto_add','2018-09-03 13:54:12.227775'),(5,'admin','0003_logentry_add_action_flag_choices','2018-09-03 13:54:12.236831'),(6,'contenttypes','0002_remove_content_type_name','2018-09-03 13:54:12.289641'),(7,'auth','0002_alter_permission_name_max_length','2018-09-03 13:54:12.302483'),(8,'auth','0003_alter_user_email_max_length','2018-09-03 13:54:12.317954'),(9,'auth','0004_alter_user_username_opts','2018-09-03 13:54:12.332801'),(10,'auth','0005_alter_user_last_login_null','2018-09-03 13:54:12.354288'),(11,'auth','0006_require_contenttypes_0002','2018-09-03 13:54:12.356311'),(12,'auth','0007_alter_validators_add_error_messages','2018-09-03 13:54:12.364040'),(13,'auth','0008_alter_user_username_max_length','2018-09-03 13:54:12.382122'),(14,'auth','0009_alter_user_last_name_max_length','2018-09-03 13:54:12.395014'),(15,'sentiment_analysis','0001_initial','2018-09-03 13:54:12.460059'),(16,'sessions','0001_initial','2018-09-03 13:54:12.483676'),(17,'sentiment_analysis','0002_auto_20180903_1355','2018-09-03 13:55:45.344991');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-09-03 14:15:20.730816'),(2,'auth','0001_initial','2018-09-03 14:15:20.992057'),(3,'admin','0001_initial','2018-09-03 14:15:21.055719'),(4,'admin','0002_logentry_remove_auto_add','2018-09-03 14:15:21.063808'),(5,'admin','0003_logentry_add_action_flag_choices','2018-09-03 14:15:21.071094'),(6,'contenttypes','0002_remove_content_type_name','2018-09-03 14:15:21.119260'),(7,'auth','0002_alter_permission_name_max_length','2018-09-03 14:15:21.144678'),(8,'auth','0003_alter_user_email_max_length','2018-09-03 14:15:21.167817'),(9,'auth','0004_alter_user_username_opts','2018-09-03 14:15:21.179958'),(10,'auth','0005_alter_user_last_login_null','2018-09-03 14:15:21.200244'),(11,'auth','0006_require_contenttypes_0002','2018-09-03 14:15:21.202066'),(12,'auth','0007_alter_validators_add_error_messages','2018-09-03 14:15:21.209475'),(13,'auth','0008_alter_user_username_max_length','2018-09-03 14:15:21.230354'),(14,'auth','0009_alter_user_last_name_max_length','2018-09-03 14:15:21.253663'),(15,'sentiment_analysis','0001_initial','2018-09-03 14:15:21.330074'),(16,'sentiment_analysis','0002_auto_20180903_1355','2018-09-03 14:15:21.361969'),(17,'sessions','0001_initial','2018-09-03 14:15:21.383044');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -313,7 +313,7 @@ CREATE TABLE `django_session` (
   `expire_date` datetime(6) NOT NULL,
   PRIMARY KEY (`session_key`),
   KEY `django_session_expire_date_a5c62663` (`expire_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -344,7 +344,7 @@ CREATE TABLE `post_bar` (
   `extra` longtext,
   PRIMARY KEY (`series_id`),
   KEY `theme_floor_index` (`theme_id`,`floor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,7 +375,7 @@ CREATE TABLE `review` (
   `extra` longtext,
   PRIMARY KEY (`series_id`),
   KEY `object_type_id_index` (`object_type`,`object_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -396,4 +396,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-03 21:58:00
+-- Dump completed on 2018-09-03 22:16:36
