@@ -27,6 +27,7 @@ class PostBar(models.Model):
     floor_id = models.IntegerField()  # 楼 ID
     title = models.TextField(default="")
     content = models.TextField(default="")
+    source_url = models.CharField(max_length=2 ** 10, null=True)
     publication_at = models.IntegerField(null=True)
     created_at = models.IntegerField()
     updated_at = models.IntegerField()
