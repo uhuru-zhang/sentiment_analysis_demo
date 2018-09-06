@@ -4,7 +4,7 @@ from django.http import HttpResponse
 # Create your views here.
 from django.views.decorators.http import require_POST
 
-from web.crawler.crawler import TOUTIAO
+# from web.crawler.crawler import TOUTIAO
 from .controller import article as article_controller
 from .dao import article as article_dao
 
@@ -23,7 +23,7 @@ def query_article(request):
     return HttpResponse(article_controller.query_article(json.loads(request.body)))
 
 
-def crawler(request):
-    crawler = TOUTIAO()
-    crawler.crawl_and_save('砍人者反被砍', 10, thread_num=1)
-    return HttpResponse("Success !")
+# def crawler(request):
+#     crawler = TOUTIAO()
+#     crawler.crawl_and_save('砍人者反被砍', 10, thread_num=1)
+#     return HttpResponse("Success !")

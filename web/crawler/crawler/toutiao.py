@@ -34,10 +34,11 @@ def get_news_addr(keyword="砍人者反被砍", limit=100):
        (2) 使用一些文本处理方法去重，合并评论。
     """
     url = 'https://www.toutiao.com/search_content/'
+    count = min(20,limit) # 一次获取多少新闻
     args = {
         'keyword': keyword,
         'offset': 0,  # 从第0条新闻开始
-        'count': 20,  # 一次爬去20条新闻
+        'count': count,  # 一次爬去20条新闻
         'format': 'json',
         'from': 'search_tab',
         'cur_tab': 1,
@@ -57,7 +58,7 @@ def get_news_addr(keyword="砍人者反被砍", limit=100):
             # print(news_addr[-1])
             except:  # 不知道会出什么错误
                 pass
-        args['offset'] += 20
+        args['offset'] += count
 
     return news_addr
 

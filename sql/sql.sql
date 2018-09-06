@@ -27,7 +27,7 @@ CREATE TABLE `article` (
   `title` longtext NOT NULL,
   `document` longtext NOT NULL,
   `publication_at` int(11) DEFAULT NULL,
-  `category` int(11) DEFAULT NULL,
+  `category` varchar(128) DEFAULT NULL,
   `source_url` varchar(1024) DEFAULT NULL,
   `source_type` int(11) NOT NULL,
   `created_at` int(11) NOT NULL,
