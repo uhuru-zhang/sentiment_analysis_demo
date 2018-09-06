@@ -6,7 +6,7 @@ class BaseMeta(object):
 
 
 class Article(models.Model):
-    series_id = models.AutoField(primary_key=True)  # 序列ID
+    series_id = models.CharField(max_length=128, primary_key=True)  # 序列ID
     title = models.TextField(default="")  # 文章标题
     document = models.TextField(default="")  # 文章内容
     publication_at = models.IntegerField(null=True)  # 发布时间
@@ -27,9 +27,9 @@ class Article(models.Model):
 
 
 class PostBar(models.Model):
-    series_id = models.AutoField(primary_key=True)
-    theme_id = models.IntegerField()  # 主题 ID
-    floor_id = models.IntegerField()  # 楼 ID
+    series_id = models.CharField(max_length=128, primary_key=True)
+    theme_id = models.CharField(max_length=128)  # 主题 ID
+    floor_id = models.CharField(max_length=128)  # 楼 ID
     title = models.TextField(default="")
     content = models.TextField(default="")
     source_url = models.CharField(max_length=2 ** 10, null=True)
@@ -48,9 +48,9 @@ class PostBar(models.Model):
 
 
 class Review(models.Model):
-    series_id = models.AutoField(primary_key=True)
+    series_id = models.CharField(max_length=128, primary_key=True)
     object_type = models.IntegerField()  # 评论种类 0: Article 1: PostBar
-    object_id = models.IntegerField()  # 内容ID
+    object_id = models.CharField(max_length=128)  # 内容ID
     content = models.TextField(default="")
     upvote_num = models.IntegerField(null=True)  # 点赞数
     publication_at = models.IntegerField(null=True)

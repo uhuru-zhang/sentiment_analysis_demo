@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `article`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `article` (
-  `series_id` int(11) NOT NULL AUTO_INCREMENT,
+  `series_id` varchar(128) NOT NULL,
   `title` longtext NOT NULL,
   `document` longtext NOT NULL,
   `publication_at` int(11) DEFAULT NULL,
@@ -43,6 +43,7 @@ CREATE TABLE `article` (
 
 LOCK TABLES `article` WRITE;
 /*!40000 ALTER TABLE `article` DISABLE KEYS */;
+INSERT INTO `article` VALUES ('04d83a34-b182-11e8-8454-8c8590cd4d4b','test_title','test_document',100,100,'test_source_url',100,1536203262,1536203262,''),('04dc3774-b182-11e8-a9eb-8c8590cd4d4b','test_title','test_document',100,100,'test_source_url',100,1536203262,1536203262,''),('2012','test_title','test_document',100,100,'test_source_url',100,1536200914,1536200914,''),('2013','test_title','test_document',100,100,'test_source_url',100,1536200971,1536200971,''),('2014','test_title','test_document',100,100,'test_source_url',100,1536201529,1536201529,'');
 /*!40000 ALTER TABLE `article` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -287,7 +288,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,7 +297,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-09-03 14:15:20.730816'),(2,'auth','0001_initial','2018-09-03 14:15:20.992057'),(3,'admin','0001_initial','2018-09-03 14:15:21.055719'),(4,'admin','0002_logentry_remove_auto_add','2018-09-03 14:15:21.063808'),(5,'admin','0003_logentry_add_action_flag_choices','2018-09-03 14:15:21.071094'),(6,'contenttypes','0002_remove_content_type_name','2018-09-03 14:15:21.119260'),(7,'auth','0002_alter_permission_name_max_length','2018-09-03 14:15:21.144678'),(8,'auth','0003_alter_user_email_max_length','2018-09-03 14:15:21.167817'),(9,'auth','0004_alter_user_username_opts','2018-09-03 14:15:21.179958'),(10,'auth','0005_alter_user_last_login_null','2018-09-03 14:15:21.200244'),(11,'auth','0006_require_contenttypes_0002','2018-09-03 14:15:21.202066'),(12,'auth','0007_alter_validators_add_error_messages','2018-09-03 14:15:21.209475'),(13,'auth','0008_alter_user_username_max_length','2018-09-03 14:15:21.230354'),(14,'auth','0009_alter_user_last_name_max_length','2018-09-03 14:15:21.253663'),(15,'sentiment_analysis','0001_initial','2018-09-03 14:15:21.330074'),(16,'sentiment_analysis','0002_auto_20180903_1355','2018-09-03 14:15:21.361969'),(17,'sessions','0001_initial','2018-09-03 14:15:21.383044'),(18,'sentiment_analysis','0003_postbar_source_url','2018-09-04 11:30:18.663269');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-09-03 14:15:20.730816'),(2,'auth','0001_initial','2018-09-03 14:15:20.992057'),(3,'admin','0001_initial','2018-09-03 14:15:21.055719'),(4,'admin','0002_logentry_remove_auto_add','2018-09-03 14:15:21.063808'),(5,'admin','0003_logentry_add_action_flag_choices','2018-09-03 14:15:21.071094'),(6,'contenttypes','0002_remove_content_type_name','2018-09-03 14:15:21.119260'),(7,'auth','0002_alter_permission_name_max_length','2018-09-03 14:15:21.144678'),(8,'auth','0003_alter_user_email_max_length','2018-09-03 14:15:21.167817'),(9,'auth','0004_alter_user_username_opts','2018-09-03 14:15:21.179958'),(10,'auth','0005_alter_user_last_login_null','2018-09-03 14:15:21.200244'),(11,'auth','0006_require_contenttypes_0002','2018-09-03 14:15:21.202066'),(12,'auth','0007_alter_validators_add_error_messages','2018-09-03 14:15:21.209475'),(13,'auth','0008_alter_user_username_max_length','2018-09-03 14:15:21.230354'),(14,'auth','0009_alter_user_last_name_max_length','2018-09-03 14:15:21.253663'),(15,'sentiment_analysis','0001_initial','2018-09-03 14:15:21.330074'),(16,'sentiment_analysis','0002_auto_20180903_1355','2018-09-03 14:15:21.361969'),(17,'sessions','0001_initial','2018-09-03 14:15:21.383044'),(18,'sentiment_analysis','0003_postbar_source_url','2018-09-04 11:30:18.663269'),(19,'sentiment_analysis','0004_auto_20180906_0257','2018-09-06 02:57:50.498742');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -333,9 +334,9 @@ DROP TABLE IF EXISTS `post_bar`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `post_bar` (
-  `series_id` int(11) NOT NULL AUTO_INCREMENT,
-  `theme_id` int(11) NOT NULL,
-  `floor_id` int(11) NOT NULL,
+  `series_id` varchar(128) NOT NULL,
+  `theme_id` varchar(128) NOT NULL,
+  `floor_id` varchar(128) NOT NULL,
   `title` longtext NOT NULL,
   `content` longtext NOT NULL,
   `publication_at` int(11) DEFAULT NULL,
@@ -365,9 +366,9 @@ DROP TABLE IF EXISTS `review`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `review` (
-  `series_id` int(11) NOT NULL AUTO_INCREMENT,
+  `series_id` varchar(128) NOT NULL,
   `object_type` int(11) NOT NULL,
-  `object_id` int(11) NOT NULL,
+  `object_id` varchar(128) NOT NULL,
   `content` longtext NOT NULL,
   `upvote_num` int(11) DEFAULT NULL,
   `publication_at` int(11) DEFAULT NULL,
@@ -385,6 +386,7 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
+INSERT INTO `review` VALUES ('04dc9f3e-b182-11e8-af4e-8c8590cd4d4b',10,'04d83a34-b182-11e8-8454-8c8590cd4d4b','content',10,10,1536203262,1536203262,''),('1',10,'10','content',10,10,1536200971,1536200971,''),('2',10,'10','content',10,10,1536201529,1536201529,'');
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -397,4 +399,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-04 19:30:37
+-- Dump completed on 2018-09-06 11:09:50
