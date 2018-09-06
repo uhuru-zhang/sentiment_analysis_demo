@@ -9,10 +9,16 @@
 3. get_comments(addr,limit=1000)
 """
 
+import re
 import json
+import time
 from bs4 import BeautifulSoup
 
-from .lib import simple_download, download_use_chromedriver
+try:
+    from .lib import simple_download, download_use_chromedriver
+except:
+    from lib import simple_download, download_use_chromedriver
+
 
 
 def get_news_addr(keyword="砍人者反被砍", limit=100):
@@ -62,6 +68,18 @@ def _write_addr(dir_, addrs):
         file_out.writelines([str(addr) + '\n' for addr in addrs])
 
 
+def get_time_from_str(str_):
+    """
+    s 例如 原创 水木然 2018-08-30 23:11:30
+    """
+    str_time = re.search(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}',str_)
+    if not str_time:
+        return -1
+    str_time = str_time.group()
+    struct_time = time.strptime(str_time,'%Y-%m-%d %H:%M:%S')
+    return int(time.mktime(struct_time))
+
+
 def get_news_content(addr):
     """
     根据地址爬取新闻正文
@@ -79,12 +97,23 @@ def get_news_content(addr):
         return -1
 
     soup = BeautifulSoup(html, 'html.parser')
-    title = soup.find('h1', class_='article-title').text
+    try:
+        title = soup.find('h1', class_='article-title').text
+    except AttributeError: # 问答
+        return -1
     document = soup.find('div', class_='article-content').text
+
     publication_at = soup.find('div', class_='article-sub').text
+    publication_at = get_time_from_str(publication_at)
+
     category = soup.find('div', class_="bui-left chinese-tag").text  # 首页\n/\n其他\n/\n正文
     category = category.split('\n')[2].strip()
-    tags = soup.find('ul', class_='tag-list').text
+
+    tags = soup.find('ul', class_='tag-list')
+    
+    tags = tags.find_all('li',class_='tag-item')
+    tags = [tag.text for tag in tags]
+    tags = ','.join(tags)
 
     return source_url, title, document, publication_at, tags, category
 
@@ -114,9 +143,9 @@ def get_comments(addr, limit=1000):
         for comment in many_comments:
             content = comment['text']
             upvote = comment['digg_count']
-            create_at = comment['create_time']
-            comments.append((content, upvote, create_at))
-            print(len(comments), comments[-1])
+            publication_at = comment['create_time']
+            comments.append((content, upvote, publication_at))
+            # print(len(comments), comments[-1])
     return comments
 
 
@@ -129,8 +158,9 @@ if __name__ == '__main__':
     # _write_addr('data/toutiao_addr.txt',addrs)
 
     ## 功能2：根据地址，获取文章正文
-    # r = get_news_content(addr2)
-    # print (r)
+    r = get_news_content(addr2)
+    print (r)
 
     # 功能2：根据地址，获取评论
-    r = get_comments(addr2)
+    # r = get_comments(addr2)
+    

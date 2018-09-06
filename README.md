@@ -1,7 +1,5 @@
 # sentiment_analysis_demo
 
-面向情感分析、舆情分析的一个网站，尚未上线，敬请期待。
-
 灵感源自
 - [http://fsight.qq.com/Game/173#/outline](http://fsight.qq.com/Game/173#/outline)
 
