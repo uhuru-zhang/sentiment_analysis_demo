@@ -1,5 +1,7 @@
 import time
+import uuid
 
+from ..const import object_type_dict
 from ..models import Article, Review
 
 
@@ -21,7 +23,10 @@ def query_articles(filters, limit=(0, 100)):
 
 
 def save_article(title="", document="", publication_at=0, category=0, source_url="", source_type=0, extra=""):
+    series_id = uuid.uuid1()
+
     Article(
+        series_id=series_id,
         title=title,
         document=document,
         publication_at=publication_at,
@@ -33,9 +38,14 @@ def save_article(title="", document="", publication_at=0, category=0, source_url
         extra=extra
     ).save()
 
+    return series_id, object_type_dict["article"]
+
 
 def save_review(object_type, object_id, content="", upvote_num=0, publication_at=0, extra=""):
+    series_id = uuid.uuid1()
+
     Review(
+        series_id=series_id,
         object_type=object_type,
         object_id=object_id,
         content=content,
@@ -45,3 +55,5 @@ def save_review(object_type, object_id, content="", upvote_num=0, publication_at
         updated_at=int(time.time()),
         extra=extra
     ).save()
+
+    return series_id
