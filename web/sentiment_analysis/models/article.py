@@ -20,6 +20,11 @@ class Article(models.Model):
     class Meta(BaseMeta):
         db_table = "article"
 
+    def __str__(self):
+        return self.title + "\n"
+
+    objects = models.Manager()
+
 
 class PostBar(models.Model):
     series_id = models.AutoField(primary_key=True)
@@ -39,6 +44,8 @@ class PostBar(models.Model):
             models.Index(fields=["theme_id", "floor_id"], name="theme_floor_index")
         ]
 
+    objects = models.Manager()
+
 
 class Review(models.Model):
     series_id = models.AutoField(primary_key=True)
@@ -56,3 +63,5 @@ class Review(models.Model):
         indexes = [
             models.Index(fields=["object_type", "object_id"], name="object_type_id_index")
         ]
+
+    objects = models.Manager()
