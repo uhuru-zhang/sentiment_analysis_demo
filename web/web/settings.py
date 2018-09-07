@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'crawler',
     'sentiment_analysis.apps.SentimentAnalysisConfig',
     'django.contrib.admin',
     'django.contrib.auth',

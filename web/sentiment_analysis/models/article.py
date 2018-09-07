@@ -10,7 +10,7 @@ class Article(models.Model):
     title = models.TextField(default="")  # 文章标题
     document = models.TextField(default="")  # 文章内容
     publication_at = models.IntegerField(null=True)  # 发布时间
-    category = models.IntegerField(null=True)  # 所属种类
+    category = models.CharField(max_length=128, null=True)   # 所属种类
     source_url = models.CharField(max_length=2 ** 10, null=True)  # 来源 URL
     source_type = models.IntegerField(default=-1)  # 来源种类 贴吧、天涯
     created_at = models.IntegerField()
