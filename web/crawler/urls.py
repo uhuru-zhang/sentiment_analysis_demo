@@ -4,6 +4,5 @@ from .views import index
 
 urlpatterns = [
     # url(r'toutiao/$','crawler.views.index'),)
-    path(r"", index),
     path(r"toutiao", index),
 ]
