@@ -2,7 +2,7 @@ import time
 import uuid
 
 from ..const import object_type_dict
-from ..models import Article, Review
+from ..models import Article, Review, Keyword
 
 
 def query_articles(filters, limit=(0, 100)):
@@ -57,3 +57,31 @@ def save_review(object_type, object_id, content="", upvote_num=0, publication_at
     ).save()
 
     return series_id
+
+
+def save_keyword(object_type, object_id, content="", article_url="", extra=""):
+    series_id = uuid.uuid1()
+
+    Keyword(
+        series_id=series_id,
+        object_type=object_type,
+        object_id=object_id,
+        content=content,
+        article_url=article_url,
+        created_at=int(time.time()),
+        updated_at=int(time.time()),
+        extra=extra
+    ).save()
+
+    return series_id
+
+
+def query_keyword_by_content(content):
+    raw_query = """
+        select series_id, object_type, object_id, content, article_url
+        from keyword 
+        where content='{content}'
+    """.format(content=content)
+
+    print(raw_query)
+    return Keyword.objects.raw(raw_query=raw_query)
