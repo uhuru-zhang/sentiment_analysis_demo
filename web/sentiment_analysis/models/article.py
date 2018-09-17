@@ -65,3 +65,23 @@ class Review(models.Model):
         ]
 
     objects = models.Manager()
+
+
+class Keyword(models.Model):
+    series_id = models.CharField(max_length=128, primary_key=True)
+    object_type = models.IntegerField()  # 评论种类 0: Article 1: PostBar
+    object_id = models.CharField(max_length=128)  # 内容ID
+    content = models.TextField(default="")
+    article_url = models.CharField(max_length=2 ** 10, null=True)  # 来源 URL
+    created_at = models.IntegerField()
+    updated_at = models.IntegerField()
+
+    extra = models.TextField(null=True)
+
+    class Meta(BaseMeta):
+        db_table = "keyword"
+        indexes = [
+            models.Index(fields=["object_type", "object_id"], name="object_type_id_index")
+        ]
+
+    objects = models.Manager()
