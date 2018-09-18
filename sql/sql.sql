@@ -34,7 +34,7 @@ CREATE TABLE `article` (
   `updated_at` int(11) NOT NULL,
   `extra` longtext,
   PRIMARY KEY (`series_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,6 @@ CREATE TABLE `article` (
 
 LOCK TABLES `article` WRITE;
 /*!40000 ALTER TABLE `article` DISABLE KEYS */;
-INSERT INTO `article` VALUES ('04d83a34-b182-11e8-8454-8c8590cd4d4b','test_title','test_document',100,100,'test_source_url',100,1536203262,1536203262,''),('04dc3774-b182-11e8-a9eb-8c8590cd4d4b','test_title','test_document',100,100,'test_source_url',100,1536203262,1536203262,''),('2012','test_title','test_document',100,100,'test_source_url',100,1536200914,1536200914,''),('2013','test_title','test_document',100,100,'test_source_url',100,1536200971,1536200971,''),('2014','test_title','test_document',100,100,'test_source_url',100,1536201529,1536201529,'');
 /*!40000 ALTER TABLE `article` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,7 +58,7 @@ CREATE TABLE `auth_group` (
   `name` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +86,7 @@ CREATE TABLE `auth_group_permissions` (
   KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
   CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,7 +113,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +122,7 @@ CREATE TABLE `auth_permission` (
 
 LOCK TABLES `auth_permission` WRITE;
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
-INSERT INTO `auth_permission` VALUES (1,'Can add article',1,'add_article'),(2,'Can change article',1,'change_article'),(3,'Can delete article',1,'delete_article'),(4,'Can view article',1,'view_article'),(5,'Can add post bar',2,'add_postbar'),(6,'Can change post bar',2,'change_postbar'),(7,'Can delete post bar',2,'delete_postbar'),(8,'Can view post bar',2,'view_postbar'),(9,'Can add review',3,'add_review'),(10,'Can change review',3,'change_review'),(11,'Can delete review',3,'delete_review'),(12,'Can view review',3,'view_review'),(13,'Can add log entry',4,'add_logentry'),(14,'Can change log entry',4,'change_logentry'),(15,'Can delete log entry',4,'delete_logentry'),(16,'Can view log entry',4,'view_logentry'),(17,'Can add permission',5,'add_permission'),(18,'Can change permission',5,'change_permission'),(19,'Can delete permission',5,'delete_permission'),(20,'Can view permission',5,'view_permission'),(21,'Can add group',6,'add_group'),(22,'Can change group',6,'change_group'),(23,'Can delete group',6,'delete_group'),(24,'Can view group',6,'view_group'),(25,'Can add user',7,'add_user'),(26,'Can change user',7,'change_user'),(27,'Can delete user',7,'delete_user'),(28,'Can view user',7,'view_user'),(29,'Can add content type',8,'add_contenttype'),(30,'Can change content type',8,'change_contenttype'),(31,'Can delete content type',8,'delete_contenttype'),(32,'Can view content type',8,'view_contenttype'),(33,'Can add session',9,'add_session'),(34,'Can change session',9,'change_session'),(35,'Can delete session',9,'delete_session'),(36,'Can view session',9,'view_session');
+INSERT INTO `auth_permission` VALUES (1,'Can add article',1,'add_article'),(2,'Can change article',1,'change_article'),(3,'Can delete article',1,'delete_article'),(4,'Can view article',1,'view_article'),(5,'Can add keyword',2,'add_keyword'),(6,'Can change keyword',2,'change_keyword'),(7,'Can delete keyword',2,'delete_keyword'),(8,'Can view keyword',2,'view_keyword'),(9,'Can add post bar',3,'add_postbar'),(10,'Can change post bar',3,'change_postbar'),(11,'Can delete post bar',3,'delete_postbar'),(12,'Can view post bar',3,'view_postbar'),(13,'Can add review',4,'add_review'),(14,'Can change review',4,'change_review'),(15,'Can delete review',4,'delete_review'),(16,'Can view review',4,'view_review'),(17,'Can add log entry',5,'add_logentry'),(18,'Can change log entry',5,'change_logentry'),(19,'Can delete log entry',5,'delete_logentry'),(20,'Can view log entry',5,'view_logentry'),(21,'Can add permission',6,'add_permission'),(22,'Can change permission',6,'change_permission'),(23,'Can delete permission',6,'delete_permission'),(24,'Can view permission',6,'view_permission'),(25,'Can add group',7,'add_group'),(26,'Can change group',7,'change_group'),(27,'Can delete group',7,'delete_group'),(28,'Can view group',7,'view_group'),(29,'Can add user',8,'add_user'),(30,'Can change user',8,'change_user'),(31,'Can delete user',8,'delete_user'),(32,'Can view user',8,'view_user'),(33,'Can add content type',9,'add_contenttype'),(34,'Can change content type',9,'change_contenttype'),(35,'Can delete content type',9,'delete_contenttype'),(36,'Can view content type',9,'view_contenttype'),(37,'Can add session',10,'add_session'),(38,'Can change session',10,'change_session'),(39,'Can delete session',10,'delete_session'),(40,'Can view session',10,'view_session');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +147,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,7 +175,7 @@ CREATE TABLE `auth_user_groups` (
   KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`),
   CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
   CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +203,7 @@ CREATE TABLE `auth_user_user_permissions` (
   KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`),
   CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,7 +236,7 @@ CREATE TABLE `django_admin_log` (
   KEY `django_admin_log_user_id_c564eba6_fk_auth_user_id` (`user_id`),
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +261,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -271,7 +270,7 @@ CREATE TABLE `django_content_type` (
 
 LOCK TABLES `django_content_type` WRITE;
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
-INSERT INTO `django_content_type` VALUES (4,'admin','logentry'),(6,'auth','group'),(5,'auth','permission'),(7,'auth','user'),(8,'contenttypes','contenttype'),(1,'sentiment_analysis','article'),(2,'sentiment_analysis','postbar'),(3,'sentiment_analysis','review'),(9,'sessions','session');
+INSERT INTO `django_content_type` VALUES (5,'admin','logentry'),(7,'auth','group'),(6,'auth','permission'),(8,'auth','user'),(9,'contenttypes','contenttype'),(1,'sentiment_analysis','article'),(2,'sentiment_analysis','keyword'),(3,'sentiment_analysis','postbar'),(4,'sentiment_analysis','review'),(10,'sessions','session');
 /*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,7 +287,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,7 +296,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-09-03 14:15:20.730816'),(2,'auth','0001_initial','2018-09-03 14:15:20.992057'),(3,'admin','0001_initial','2018-09-03 14:15:21.055719'),(4,'admin','0002_logentry_remove_auto_add','2018-09-03 14:15:21.063808'),(5,'admin','0003_logentry_add_action_flag_choices','2018-09-03 14:15:21.071094'),(6,'contenttypes','0002_remove_content_type_name','2018-09-03 14:15:21.119260'),(7,'auth','0002_alter_permission_name_max_length','2018-09-03 14:15:21.144678'),(8,'auth','0003_alter_user_email_max_length','2018-09-03 14:15:21.167817'),(9,'auth','0004_alter_user_username_opts','2018-09-03 14:15:21.179958'),(10,'auth','0005_alter_user_last_login_null','2018-09-03 14:15:21.200244'),(11,'auth','0006_require_contenttypes_0002','2018-09-03 14:15:21.202066'),(12,'auth','0007_alter_validators_add_error_messages','2018-09-03 14:15:21.209475'),(13,'auth','0008_alter_user_username_max_length','2018-09-03 14:15:21.230354'),(14,'auth','0009_alter_user_last_name_max_length','2018-09-03 14:15:21.253663'),(15,'sentiment_analysis','0001_initial','2018-09-03 14:15:21.330074'),(16,'sentiment_analysis','0002_auto_20180903_1355','2018-09-03 14:15:21.361969'),(17,'sessions','0001_initial','2018-09-03 14:15:21.383044'),(18,'sentiment_analysis','0003_postbar_source_url','2018-09-04 11:30:18.663269'),(19,'sentiment_analysis','0004_auto_20180906_0257','2018-09-06 02:57:50.498742');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-09-17 13:51:57.263186'),(2,'auth','0001_initial','2018-09-17 13:51:57.527559'),(3,'admin','0001_initial','2018-09-17 13:51:57.600178'),(4,'admin','0002_logentry_remove_auto_add','2018-09-17 13:51:57.610780'),(5,'admin','0003_logentry_add_action_flag_choices','2018-09-17 13:51:57.618238'),(6,'contenttypes','0002_remove_content_type_name','2018-09-17 13:51:57.684467'),(7,'auth','0002_alter_permission_name_max_length','2018-09-17 13:51:57.708249'),(8,'auth','0003_alter_user_email_max_length','2018-09-17 13:51:57.725077'),(9,'auth','0004_alter_user_username_opts','2018-09-17 13:51:57.736500'),(10,'auth','0005_alter_user_last_login_null','2018-09-17 13:51:57.759889'),(11,'auth','0006_require_contenttypes_0002','2018-09-17 13:51:57.761855'),(12,'auth','0007_alter_validators_add_error_messages','2018-09-17 13:51:57.774101'),(13,'auth','0008_alter_user_username_max_length','2018-09-17 13:51:57.799217'),(14,'auth','0009_alter_user_last_name_max_length','2018-09-17 13:51:57.822830'),(15,'sentiment_analysis','0001_initial','2018-09-17 13:51:57.940336'),(16,'sessions','0001_initial','2018-09-17 13:51:57.971091');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,7 +313,7 @@ CREATE TABLE `django_session` (
   `expire_date` datetime(6) NOT NULL,
   PRIMARY KEY (`session_key`),
   KEY `django_session_expire_date_a5c62663` (`expire_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -324,6 +323,36 @@ CREATE TABLE `django_session` (
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `keyword`
+--
+
+DROP TABLE IF EXISTS `keyword`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `keyword` (
+  `series_id` varchar(128) NOT NULL,
+  `object_type` int(11) NOT NULL,
+  `object_id` varchar(128) NOT NULL,
+  `content` longtext NOT NULL,
+  `article_url` varchar(1024) DEFAULT NULL,
+  `created_at` int(11) NOT NULL,
+  `updated_at` int(11) NOT NULL,
+  `extra` longtext,
+  PRIMARY KEY (`series_id`),
+  KEY `object_type_id_index` (`object_type`,`object_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `keyword`
+--
+
+LOCK TABLES `keyword` WRITE;
+/*!40000 ALTER TABLE `keyword` DISABLE KEYS */;
+/*!40000 ALTER TABLE `keyword` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -339,14 +368,14 @@ CREATE TABLE `post_bar` (
   `floor_id` varchar(128) NOT NULL,
   `title` longtext NOT NULL,
   `content` longtext NOT NULL,
+  `source_url` varchar(1024) DEFAULT NULL,
   `publication_at` int(11) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   `extra` longtext,
-  `source_url` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`series_id`),
   KEY `theme_floor_index` (`theme_id`,`floor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -377,7 +406,7 @@ CREATE TABLE `review` (
   `extra` longtext,
   PRIMARY KEY (`series_id`),
   KEY `object_type_id_index` (`object_type`,`object_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -386,7 +415,6 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
-INSERT INTO `review` VALUES ('04dc9f3e-b182-11e8-af4e-8c8590cd4d4b',10,'04d83a34-b182-11e8-8454-8c8590cd4d4b','content',10,10,1536203262,1536203262,''),('1',10,'10','content',10,10,1536200971,1536200971,''),('2',10,'10','content',10,10,1536201529,1536201529,'');
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -399,4 +427,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-06 11:09:50
+-- Dump completed on 2018-09-18 18:10:25
