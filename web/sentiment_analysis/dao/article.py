@@ -76,6 +76,20 @@ def save_keyword(object_type, object_id, content="", article_url="", extra=""):
     return series_id
 
 
+def update_keyword_object(keyword,object_type,object_id):
+    raw_query = """
+        update keyword
+        set object_type='{object_type}',object_id='{object_id}'
+        where keyword='{series_id}',addr='{addr}'
+    """.format(series_id=series_id,
+               object_type=object_type,
+               object_id=object_id,
+               addr=addr)
+
+    print(raw_query)
+    return Keyword.objects.raw(raw_query=raw_query)
+
+
 def query_keyword_by_content(content):
     raw_query = """
         select series_id, object_type, object_id, content, article_url

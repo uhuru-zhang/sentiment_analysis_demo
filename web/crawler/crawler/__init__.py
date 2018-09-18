@@ -32,14 +32,26 @@ class TOUTIAO:
 	def save_keyword_and_addrs(self,keyword,addrs):
 		# unfinished
 		for addr in addrs:
-			self.article_sql.save_keyword(keyword,addr)
-
+			self.article_sql.save_keyword(
+				object_type=-1, object_id=-1,
+				content=keyword, article_url=addr[1], extra="TOUTIAO")
+    
 	def save_article(self,article,keyword_id):
-		# unfinished
+		source_url, title, document, publication_at, tags, category = article
+		extra = 'tags: %s' % tags
 		id_, type_ = self.article_sql.save_article(title=title, document="",
 					publication_at=publication_at, category=category,
 					source_url=source_url, source_type=0, extra=extra)
-		self.article_sql.update_keyword(id_)
+		self.article_sql.update_keyword_object_id(
+			series_id=keyword_id,
+			object_type=type_,object_id=id_)
+
+	def save_comments(self,comments):
+		for comment in comments:
+			content, upvote, publication_at = comment
+			self.article_sql.save_review(object_type=type_, object_id=id_,
+									 content=content, upvote_num=upvote, publication_at=publication_at, extra="")
+
 		
 
 	def crawl_and_save_single(self, addr):
@@ -47,7 +59,7 @@ class TOUTIAO:
 		if tuple_ == -1:  # 失败
 			print('@')
 			return
-		source_url, title, document, publication_at, tags, category = tuple_
+		
         
 		extra = 'tags: %s' % tags
 		id_, type_ = self.article_sql.save_article(title=title, document="",

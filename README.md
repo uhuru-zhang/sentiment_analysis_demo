@@ -17,12 +17,26 @@
 - 首先，使用关键词搜索，批量获取文章地址。
 - 然后，对于每一个文章地址爬取文章及评论。
 
-需要注意的是，文章地址和评论内容需要通过解析js获得，而文章内容则需要爬虫模拟浏览器以获取。
+需要注意的是，文章地址和评论内容需要通过API获得，而文章内容则需要爬虫模拟浏览器以获取。
 
-**具体实现**
+**使用的工具**
 
 - 数据下载：`requests`、`selenium`
 - 网页解析：`BeautifulSoup`
+
+**API**
+
+- 获取文章地址 
+
+> 地址 ：[https://www.toutiao.com/search_content/](https://www.toutiao.com/search_content/)
+>
+> 参数：keyword (关键词)，offset（从第几条新闻开始），count（获取的新闻数目)，format（格式）。
+
+- 获取评论
+
+> 地址：https://www.toutiao.com/api/comment/list/
+>
+> 参数：group_id（文章的id），item_id（一般与group_id一样），offset（从第几条新闻开始），count（获取的评论数目）
 
 ##2. 情感分析
 
