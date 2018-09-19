@@ -21,20 +21,23 @@ except:
 
 
 
-def get_news_addr(keyword="砍人者反被砍", limit=100):
+def get_news_addr(keyword="砍人者反被砍", limit=100, min_comment_count=0, news_count_once=5):
     """
     功能
      - 根据关键词获取头条中的新闻地址，默认获取超过100篇新闻地址后停止。
-    输出举例
-     - [('宝马男砍人反被砍死，千万不要把老实人逼上绝路！', '6595531287157539336', '6595531287157539336'),...]
+
+    输出
+     - [(title,group_id,item_id,comment_count,datetime,tag),...]
+
     需要注意的是，会出现以下问题：
      - 会找到一些不相关的新闻。这个问题通过精确检索等方法进行改善。
      - 会找到一些内容重复的新闻。这个问题有两个考虑角度：
        (1) 如仅参考评论意见，则没有必要考虑二者差异，
        (2) 使用一些文本处理方法去重，合并评论。
+     - 会返回站外新闻。
     """
     url = 'https://www.toutiao.com/search_content/'
-    count = min(5,limit) # 一次获取多少新闻
+    count = min(news_count_once,limit) # 一次获取多少新闻
     args = {
         'keyword': keyword,
         'offset': 0,  # 从第0条新闻开始
@@ -46,20 +49,31 @@ def get_news_addr(keyword="砍人者反被砍", limit=100):
     }
     has_more = 1  # 还有更多新闻
     news_addr = []
+    comment_num = 0
     while has_more == 1 and len(news_addr) < limit:
         wbdata = simple_download(url, args)
         data = json.loads(wbdata)
         has_more = data['has_more']
         many_news = data['data']
         for news in many_news:
-            try:
-                # 通过局部观察，group_id 和 item_id 是一样的
-                news_addr.append((news['title'], news['group_id'], news['item_id']))
-            except:  # 不知道会出什么错误
-                pass
+            if 'cell_type' in news:
+                continue
+            has_gallery = news['has_gallery']
+            if has_gallery:
+                continue
+            # 通过局部观察，group_id 和 item_id 是一样的
+            comment_count = int(news['comment_count'])
+            if comment_count <= min_comment_count:
+                continue
+            comment_num += comment_count
+            tuple_ = (news['title'], news['group_id'], 
+                news['item_id'],comment_count,
+                news['datetime'],news['tag'])
+            news_addr.append(tuple_)
+            print (len(news_addr),tuple_)
         args['offset'] += count
 
-    return news_addr
+    return news_addr,comment_num
 
 
 def _write_addr(dir_, addrs):
@@ -157,12 +171,13 @@ if __name__ == '__main__':
     addr2 = ('宝马男砍人反被砍死，千万不要把老实人逼上绝路！', '6595531287157539336', '6595531287157539336')
 
     ## 功能1：根据关键词，爬取新闻地址
-    # addrs = get_news_addr(keyword="砍人者反被砍",limit=100)
+    addrs,comment_num = get_news_addr(keyword="北马咸猪手",limit=100, min_comment_count=1,news_count_once=5)
+    print(len(addrs),comment_num)
     # _write_addr('data/toutiao_addr.txt',addrs)
 
     ## 功能2：根据地址，获取文章正文
-    r = get_news_content(addr2)
-    print (r)
+    # r = get_news_content(addr2)
+    # print (r)
 
     # 功能2：根据地址，获取评论
     # r = get_comments(addr2)
