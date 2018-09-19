@@ -5,10 +5,6 @@
 
 我们将根据某个关键词，如“[北马 咸猪手](https://www.baidu.com/s?rsv_idx=1&wd=%E5%8C%97%E9%A9%AC+%E5%92%B8%E7%8C%AA%E6%89%8B&usm=1&ie=utf-8&rsv_cq=%E7%83%AD%E7%82%B9&rsv_dl=0_right_fyb_pchot_20811)”，从网络中爬取文章及评论，并对其进行情感分析，以期获取公众对此事件的态度。
 
-##目录
-
-[TOC]
-
 ## 1. 数据获取
 
 - **关键词**：关键词将从[百度搜索风云榜](http://top.baidu.com/?vit=1&fr=topcategory_c513)中获取。
@@ -16,7 +12,7 @@
 
 - 具体实现见 [爬虫模块（crawler）](/web/crawler/crawler).
 
-##2. 情感分析
+## 2. 情感分析
 
 暂时考虑两种情感分析方法。
 
