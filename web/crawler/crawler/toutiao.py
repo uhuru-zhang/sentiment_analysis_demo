@@ -123,6 +123,9 @@ def get_comments(addr, limit=1000):
     功能：爬取文章下面的评论，暂不考虑评论下的回复
     输出举例：[('支持。骑车哥无罪释放。大家都顶起来。', 283, 1535646388),...]
     """
+    if limit is None:
+        limit = 1000
+    limit = int(limit)
     _, group_id, item_id = addr
     url = 'https://www.toutiao.com/api/comment/list/'
     args = {

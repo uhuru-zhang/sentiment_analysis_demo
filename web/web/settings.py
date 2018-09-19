@@ -80,6 +80,7 @@ DATABASES = {
         'NAME': 'sentiment_analysis',
         'USER': 'root',
         'PASSWORD': '123456',
+        'OPTIONS': {'charset': 'utf8mb4'}
     }
 }
 

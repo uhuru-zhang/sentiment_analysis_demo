@@ -1,10 +1,14 @@
-import json 
+import time
+import json
+import random
+import requests
+import threading
 
 from django.shortcuts import render
 from django.http import HttpResponse
 
 from sentiment_analysis.dao import article as article_sql
-from .crawler import TOUTIAO
+from .crawler import TOUTIAO,General_Thread
 
 
 def get_news_addr(request,keyword='北马 咸猪手',count=20):
@@ -15,6 +19,7 @@ def get_news_addr(request,keyword='北马 咸猪手',count=20):
 	"""
 	crawler = TOUTIAO(article_sql)
 	addrs = crawler.get_news_addr(keyword, int(count))
+	# crawler.save_keyword_and_addrs(keyword,addrs)
 	data = {
 		'keyword': keyword,
 		'count':len(addrs),
@@ -22,21 +27,74 @@ def get_news_addr(request,keyword='北马 咸猪手',count=20):
 		'news_addrs':addrs,
 	}
 	json_ = json.dumps(data,ensure_ascii=False)
-	crawler.save_keyword_and_addrs(keyword,addrs)
 	return HttpResponse(json_,content_type="application/json") 
 	
 
-def toutiao_article(request,keyword_id,addr):
+def get_news_content(request,keyword,comment_num=1000):
+	"""
+	args:
+	 keyword: 新闻对应的关键词
+	 addr: 新闻的的地址
+	 comment_num: 评论的最大数目(不精确)
+	"""
+	group_id = request.GET.get('group_id')
+	item_id  = request.GET.get('item_id')
+	comment_num = request.GET.get('comment_num')
+
+	addr = (None,group_id,item_id)
+
 	crawler = TOUTIAO(article_sql)
 	article  = crawler.get_news_content(addr)
-	comments = crawler.get_comments(addr)
-	crawler.save_article(article,keyword_id)
-	crawler.save_comments(comments,article_id)
-	return HttpResponse(addrs,keyword_id)
-	
-def test(request,keyword="北马咸猪手"):
+
+	if article is -1:
+		data = {'status': 'failure'}
+		json_ = json.dumps(data,ensure_ascii=False)
+		return HttpResponse(json_,content_type="application/json")
+
+	comments  = crawler.get_comments(addr,comment_num)
+
+	type_,id_ = crawler.save_article(article,addr,keyword)
+	crawler.save_comments(comments,type_,id_)
+
 	data = {
-		'keyword':keyword,
-		'id': 123 }
+		'status': 'success',
+		'title' :  article[2],
+		'comment_num': len(comments),
+	}
 	json_ = json.dumps(data,ensure_ascii=False)
+
+	print ('>>>',article[1],len(comments))
+
 	return HttpResponse(json_,content_type="application/json")
+
+
+def crawler_main(request,keyword,news_count=30,thread_num=50,comment_count=1000):
+	"""
+	args:
+	 keyword: 新闻关键词
+	 news_count: 爬去的新闻数量（近似）
+	 thread_num: 最大线程数量，包含了系统中的其他线程，
+	 	故达不到这个数字，大概会少20多个，不应该超过120
+	 comment_count: 最大评论数目
+	"""
+	host = request.get_host()
+	url_addr = 'http://{host}/crawler/_get_news_addr/{keyword}/{news_count}'.format(
+		host=host,keyword=keyword,news_count=news_count)
+	url_content = 'http://{host}/crawler/_get_news_content/{keyword}'
+
+	wb_data = requests.get(url_addr)
+	data = wb_data.json()
+	news_addrs = data['news_addrs']
+
+	for index,addr in enumerate(news_addrs):
+		the_url = url_content.format(host=host,keyword=keyword)
+		args = {
+			'group_id': addr[1],
+			'item_id' : addr[2],
+			'comment_num': comment_count}
+		while threading.activeCount()>min(thread_num,120):
+			time.sleep(random.randint(1,5))
+		General_Thread(requests.get,(the_url,args)).start()
+		print (index,addr)
+
+	return HttpResponse(wb_data,content_type="application/json")
