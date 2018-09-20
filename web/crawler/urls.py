@@ -12,6 +12,4 @@ urlpatterns = [
     url(r'_get_news_content/(?P<keyword>.*)$',views.get_news_content),
     # 例如 crawler/main/北马 咸猪手
     url(r'main/(?P<keyword>.*)/(?P<news_count>\d*)$',views.crawler_main),
-    # 例如 crawler/heat/北马 咸猪手
-    url(r'heat/(?P<keyword>.*)/$',views.event_heat)
 ]

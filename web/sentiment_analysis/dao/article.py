@@ -84,8 +84,7 @@ def query_keyword_by_content(content):
         from keyword 
         where content='{content}'
     """.format(content=content)
-
-    print(raw_query)
+    
     return Keyword.objects.raw(raw_query=raw_query)
 
 

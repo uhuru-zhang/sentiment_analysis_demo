@@ -23,7 +23,7 @@ def get_news_addr(request,keyword='北马 咸猪手',count=20):
 	data = {
 		'keyword': keyword,
 		'count':len(addrs),
-		'format':'title,group_id,item_id',
+		'format':'title,group_id,item_id,commet_count,datatime,tag',
 		'news_addrs':addrs,
 	}
 	json_ = json.dumps(data,ensure_ascii=False)
@@ -52,7 +52,7 @@ def get_news_content(request,keyword,comment_num=1000):
 		json_ = json.dumps(data,ensure_ascii=False)
 		return HttpResponse(json_,content_type="application/json")
 
-	comments  = crawler.get_comments(addr,-1)
+	comments  = crawler.get_comments(addr,comment_num)
 
 	type_,id_ = crawler.save_article(article,keyword)
 	crawler.save_comments(comments,type_,id_)
@@ -69,7 +69,7 @@ def get_news_content(request,keyword,comment_num=1000):
 	return HttpResponse(json_,content_type="application/json")
 
 
-def crawler_main(request,keyword,news_count=30,thread_num=50,comment_count=1000):
+def crawler_main(request,keyword,news_count=30,thread_num=50,comment_num=-1):
 	"""
 	args:
 	 keyword: 新闻关键词
@@ -93,7 +93,8 @@ def crawler_main(request,keyword,news_count=30,thread_num=50,comment_count=1000)
 			'group_id': addr[1],
 			'item_id':  addr[2],
 			'datetime': addr[4],
-			'category': addr[5]}
+			'category': addr[5],
+			'comment_num': comment_num}
 		while threading.activeCount()>min(thread_num,120):
 			time.sleep(random.randint(1,5))
 		General_Thread(requests.get,(the_url,args)).start()
@@ -101,21 +102,3 @@ def crawler_main(request,keyword,news_count=30,thread_num=50,comment_count=1000)
 
 	return HttpResponse(wb_data,content_type="application/json")
 
-
-def event_heat(request,keyword):
-	sql = 'select review.series_id,review.content,review.upvote_num \
-	       from keyword,review \
-		   where keyword.content="{keyword}" and \
-		         keyword.object_id=review.object_id;'.format(keyword=keyword)
-	comments = article_sql.execute_sql(sql)
-	heat_num = 0
-	for comment in comments:
-		heat_num += comment.upvote_num + 2
-	return HttpResponse(heat_num)
-
-def heat_by_day(request,keyword,day):
-	sql = 'select review.series_id,count(review.content) \
-	       from keyword,review \
-		   where keyword.content="{keyword}" and \
-		         keyword.object_id=review.object_id;'.format(keyword=keyword)
-	comments = article_sql.execute_sql(sql)

@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("sentiment_analysis/", include("sentiment_analysis.urls")),
     path("crawler/", include("crawler.urls")),
+    path("algorithm/", include("algorithm.urls"))
 ]
