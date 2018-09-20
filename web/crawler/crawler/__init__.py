@@ -25,7 +25,7 @@ class TOUTIAO:
 		return toutiao.get_news_content(addr)
 
 	def get_comments(self, addr, limit):
-		return toutiao.get_comments(addr,limit=limit)
+		return toutiao.get_comments(addr,count_once=50,limit=limit)
 
 	def save_keyword_and_addrs(self,keyword,addrs):
 		for addr in addrs:
@@ -33,12 +33,12 @@ class TOUTIAO:
 				object_type=-1, object_id=-1,
 				content=keyword, article_url=addr, extra="TOUTIAO")
     
-	def save_article(self,article,addr,keyword):
-		source_url, title, document, publication_at, tags, category = article
-		extra = 'tags: %s' % tags
+	def save_article(self,article,keyword):
+		source_url, title, document, publication_at, category = article
+		
 		id_, type_ = self.article_sql.save_article(title=title, document=document,
 					publication_at=publication_at, category=category,
-					source_url=source_url, source_type=0, extra=extra)
+					source_url=source_url, source_type=0, extra="")
 		self.article_sql.save_keyword(
 			content=keyword, object_type=type_, object_id=id_)
 		return type_,id_

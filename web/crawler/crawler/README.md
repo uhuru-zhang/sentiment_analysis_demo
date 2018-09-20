@@ -2,7 +2,7 @@
 
 这一部分的目标是根据关键词，批量爬取相关的新闻和评论。暂时只实现了对今日头条中新闻的爬取。
 
-###1.1 今日头条爬虫
+##1 今日头条爬虫
 
 爬虫的入口地址为 [https://www.toutiao.com/search_content/](https://www.toutiao.com/search_content/)。数据爬取的流程如下：
 
@@ -13,10 +13,10 @@
 
 **使用的工具**
 
-- 数据下载：`requests`、`selenium`
+- 数据下载：`requests`、`selenium`、`Fidder`
 - 网页解析：`BeautifulSoup`
 
-###API简介、
+###API简介
 
 **(1) 获取文章地址** 
 
@@ -30,9 +30,9 @@ args:
 - format: 数据返回格式，可选值 json
 - cur_tab: 1-综合，2-视频，3-图集，4-用户，5-问答
 
-返回数据格式
+返回的JSON格式
 
-- has_more: 1
+- has_more: 1/0
 - data
   - list
     - title: 新闻标题
@@ -54,11 +54,24 @@ args:
 
 **(2) 获取评论**
 
-URL：https://www.toutiao.com/api/comment/list/
+由于今日头条的评论只在APP内才完全显示，因此使用抓包工具[Fidder](https://www.telerik.com/download/fiddler)进行分析。关于Fidder的使用，可参考[这篇博客](https://blog.csdn.net/c406495762/article/details/76850843)。以下是分析后得到的API。
 
-args：
+URL: https://ic.snssdk.com/article/v3/tab_comments/
 
-- group_id（文章的id）
-- item_id（一般与group_id一样）
-- offset（从第几条新闻开始）
-  - 																																																																																																																																																																																																																																																																																																																																																																																					count（获取的评论数目）
+args:
+
+- group_id: 如 6594719863497818627
+- item_id: 与group的值一样
+- count: 数目
+- offset: 偏移
+- device_platform: 如android
+
+返回的JSON格式
+
+- data
+  - list
+    - comment
+      - text: 评论内容
+      - djgg_count: 赞的个数
+      - create_time: 创建时间
+  - has_more: True/False

@@ -18,7 +18,7 @@ def get_news_addr(request,keyword='北马 咸猪手',count=20):
 	 count: 大致数目，一般误差在5以内
 	"""
 	crawler = TOUTIAO(article_sql)
-	addrs = crawler.get_news_addr(keyword, int(count))
+	addrs = crawler.get_news_addr(keyword, int(count))[0]
 	# crawler.save_keyword_and_addrs(keyword,addrs)
 	data = {
 		'keyword': keyword,
@@ -38,10 +38,11 @@ def get_news_content(request,keyword,comment_num=1000):
 	 comment_num: 评论的最大数目(不精确)
 	"""
 	group_id = request.GET.get('group_id')
-	item_id  = request.GET.get('item_id')
-	comment_num = request.GET.get('comment_num')
+	item_id  = request.GET.get('datetime')
+	datetime = request.GET.get('datetime')
+	category = request.GET.get('category')
 
-	addr = (None,group_id,item_id)
+	addr = None,group_id,item_id,None,datetime,category
 
 	crawler = TOUTIAO(article_sql)
 	article  = crawler.get_news_content(addr)
@@ -51,9 +52,9 @@ def get_news_content(request,keyword,comment_num=1000):
 		json_ = json.dumps(data,ensure_ascii=False)
 		return HttpResponse(json_,content_type="application/json")
 
-	comments  = crawler.get_comments(addr,comment_num)
+	comments  = crawler.get_comments(addr,-1)
 
-	type_,id_ = crawler.save_article(article,addr,keyword)
+	type_,id_ = crawler.save_article(article,keyword)
 	crawler.save_comments(comments,type_,id_)
 
 	data = {
@@ -63,7 +64,7 @@ def get_news_content(request,keyword,comment_num=1000):
 	}
 	json_ = json.dumps(data,ensure_ascii=False)
 
-	print ('>>>',article[1],len(comments))
+	# print ('>>>',article[1],len(comments))
 
 	return HttpResponse(json_,content_type="application/json")
 
@@ -90,11 +91,12 @@ def crawler_main(request,keyword,news_count=30,thread_num=50,comment_count=1000)
 		the_url = url_content.format(host=host,keyword=keyword)
 		args = {
 			'group_id': addr[1],
-			'item_id' : addr[2],
-			'comment_num': comment_count}
+			'item_id':  addr[2],
+			'datetime': addr[4],
+			'category': addr[5]}
 		while threading.activeCount()>min(thread_num,120):
 			time.sleep(random.randint(1,5))
 		General_Thread(requests.get,(the_url,args)).start()
-		print (index,addr)
+		print (index,addr[0])
 
 	return HttpResponse(wb_data,content_type="application/json")
