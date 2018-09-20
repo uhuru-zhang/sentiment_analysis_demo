@@ -72,6 +72,27 @@ args:
   - list
     - comment
       - text: 评论内容
-      - djgg_count: 赞的个数
+      - id: 评论的id
+      - digg_count: 赞的个数
       - create_time: 创建时间
   - has_more: True/False
+
+**(3) 获取回复**
+
+url: https://www.toutiao.com/api/comment/get_reply/
+
+args:
+
+- comment_id
+- offset
+- count
+
+返回：
+
+- data
+  - has_more: True/False
+  - data
+    - list
+      - text
+      - digg_count
+      - create_time

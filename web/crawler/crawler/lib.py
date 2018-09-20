@@ -29,7 +29,7 @@ def simple_download(url,args={}):
 	data.encoding = 'utf-8'
 	return data.text
 
-def download_use_chromedriver(url,args={}):
+def _download_use_chromedriver(url,args={}):
 	"""调用chromedriver，爬取网页"""
 	option = webdriver.ChromeOptions()
 	option.add_argument('disable-infobars') # 不知道什么意思
@@ -41,6 +41,14 @@ def download_use_chromedriver(url,args={}):
 	driver = webdriver.Chrome(chrome_options=option) # 需要对 chromedriver.exe 设置环境变量
 	driver.get(url)
 	return driver
+
+def download_use_chromedriver(url,args={},count=5):
+	for i in range(count):
+		try:
+			return _download_use_chromedriver(url,args)
+		except selenium.common.exceptions.WebDriverException:
+			pass
+	return -1
 
 
 class General_Thread(threading.Thread):

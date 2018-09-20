@@ -45,7 +45,7 @@ class TOUTIAO:
 
 	def save_comments(self,comments,type_,id_):
 		for comment in comments:
-			content, upvote, publication_at = comment
+			content, upvote, publication_at,_ = comment
 			self.article_sql.save_review(object_type=type_, 
 				object_id=id_, content=content, upvote_num=upvote, 
 				publication_at=publication_at, extra="")

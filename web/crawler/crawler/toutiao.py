@@ -105,6 +105,8 @@ def get_news_content(addr):
     _,group_id,_,comment_count,datetime,category = addr
     source_url = 'https://www.toutiao.com/group/' + group_id
     driver = download_use_chromedriver(source_url)
+    if driver == -1:
+        return -1
     html = driver.page_source
     current_url = driver.current_url
     driver.quit()
@@ -159,13 +161,48 @@ def get_comments(addr, limit=1000, count_once=20):
             comment = comment['comment']
             content = comment['text']
             upvote  = comment['digg_count']
+            id_  = comment['id']
             publication_at = comment['create_time']
-            comments.append((content, upvote, publication_at))
+            comments.append((content, upvote, publication_at,id_))
+            # print(comment['reply_count'])
+            replys = get_reply(id_)
+            comments.extend(replys)
         
-        # print(len(comments))
         args['offset'] += count
         
     return comments
+
+
+def get_reply(comment_id,count_once=10):
+
+    url = 'https://www.toutiao.com/api/comment/get_reply/'
+    args = {
+        'comment_id': comment_id,
+        'offset': 0,  
+        'count': count_once
+    }
+
+    has_more = True  # 还有更多新闻
+    replys = []
+
+    while has_more == True:
+
+        wbdata = simple_download(url, args)
+
+        wbdata = json.loads(wbdata)
+        # print (wbdata)
+        data = wbdata['data']
+        has_more = data['has_more']
+
+        for reply in data['data']:
+            content = reply['text']
+            upvote  = reply['digg_count']
+            publication_at = reply['create_time']
+            replys.append((content, upvote, publication_at, -1))
+            # print (replys[-1])
+        args['offset'] += count_once
+        
+    return replys
 
 
 if __name__ == '__main__':
@@ -179,6 +216,10 @@ if __name__ == '__main__':
     # print (r)
 
     # 功能3：根据地址，获取评论
-    r = get_comments(addr2,count_once=40,limit=-1)
-    print (len(r)) # 28078
+    r = get_comments(addr2,count_once=40,limit=100)
+    print(len(r))
+    id_ =r[-5][-1]
+    print (id_)
+    replys = get_reply(id_)
+    print (replys)
     

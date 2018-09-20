@@ -30,7 +30,7 @@ def get_news_addr(request,keyword='北马 咸猪手',count=20):
 	return HttpResponse(json_,content_type="application/json") 
 	
 
-def get_news_content(request,keyword,comment_num=1000):
+def get_news_content(request,keyword):
 	"""
 	args:
 	 keyword: 新闻对应的关键词
@@ -41,6 +41,8 @@ def get_news_content(request,keyword,comment_num=1000):
 	item_id  = request.GET.get('datetime')
 	datetime = request.GET.get('datetime')
 	category = request.GET.get('category')
+	comment_num = request.GET.get('comment_num')
+	comment_num = int(comment_num)
 
 	addr = None,group_id,item_id,None,datetime,category
 
@@ -69,7 +71,7 @@ def get_news_content(request,keyword,comment_num=1000):
 	return HttpResponse(json_,content_type="application/json")
 
 
-def crawler_main(request,keyword,news_count=30,thread_num=50,comment_num=-1):
+def crawler_main(request,keyword,news_count=30):
 	"""
 	args:
 	 keyword: 新闻关键词
@@ -78,6 +80,16 @@ def crawler_main(request,keyword,news_count=30,thread_num=50,comment_num=-1):
 	 	故达不到这个数字，大概会少20多个，不应该超过120
 	 comment_count: 最大评论数目
 	"""
+	thread_num = request.GET.get('thread_num')
+	if thread_num is None:
+		print (thread_num)
+		thread_num = 50
+	thread_num = int(thread_num)
+	comment_num = request.GET.get('comment_num')
+	if comment_num is None:
+		comment_num = -1
+	comment_num = int(comment_num)
+
 	host = request.get_host()
 	url_addr = 'http://{host}/crawler/_get_news_addr/{keyword}/{news_count}'.format(
 		host=host,keyword=keyword,news_count=news_count)
@@ -95,7 +107,7 @@ def crawler_main(request,keyword,news_count=30,thread_num=50,comment_num=-1):
 			'datetime': addr[4],
 			'category': addr[5],
 			'comment_num': comment_num}
-		while threading.activeCount()>min(thread_num,120):
+		while threading.activeCount()>min(thread_num,75):
 			time.sleep(random.randint(1,5))
 		General_Thread(requests.get,(the_url,args)).start()
 		print (index,addr[0])

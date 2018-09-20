@@ -32,3 +32,22 @@ url: `{host}/algorithm/heat_by_day/{keyword}/{day}`
 - keyword
 - comment_num
 - day
+
+## 2 热词
+
+热词即事件的关键词，这里使用提供两种获取关键词的方法：TFIDF权重和TextRank方法，其中后者慢许多。
+
+**API如下：**
+
+url: `{host}/algorithm/hot_words/{keyword}/`
+
+args:
+
+- method: TDIDF或TextRank
+- topk: 默认为10
+
+返回：
+
+- keyword: 事件的关键词
+- count: 热词的数量
+- hot_words: 列表，每一项的格式为 (word, weight)

@@ -2,11 +2,13 @@ import time
 import json
 
 from django.http import HttpResponse
+
 from sentiment_analysis.dao import article as article_sql
+from .analysis.keyword_extract import keyword_by_TFIDF,keyword_by_textRank
 
 
 def event_heat(request,keyword):
-	sql = 'select review.series_id,review.content,review.upvote_num \
+	sql = 'select review.series_id,review.upvote_num \
 		   from keyword,review \
 		   where keyword.content="{keyword}" and \
 				 keyword.object_id=review.object_id;'.format(keyword=keyword)
@@ -42,3 +44,41 @@ def heat_by_day(request,keyword,day):
 	}
 	json_ = json.dumps(data,ensure_ascii=False)
 	return HttpResponse(json_,content_type="application/json")
+
+
+def keywords_from_comment(request,keyword):
+
+	method = request.GET.get('method') # TFIDF、TextRank
+	topK = request.GET.get('topK')
+	if topK is None:
+		topK = 10
+	topK = int(topK)
+
+	sql = 'select 1 as series_id,review.content \
+		   from keyword,review \
+		   where keyword.content="{keyword}" and \
+				 keyword.object_id=review.object_id;'.format(keyword=keyword)
+	comments = article_sql.execute_sql(sql)
+	comments = [comment.content for comment in comments]
+	comments = '\n'.join(comments)
+
+	if method == 'TFIDF':
+		keywords = keyword_by_TFIDF(comments,topK)
+	elif method == 'TextRank':
+		keywords = keyword_by_textRank(comments,topK)
+	else:
+		raise ValueError("Unknown method type!")
+
+	keywords = list(keywords)
+
+	data = {
+		'keyword' : keyword,
+		'count': topK,
+		'hot_words': keywords,
+	}
+	json_ = json.dumps(data,ensure_ascii=False)
+	return HttpResponse(json_,content_type="application/json")
+
+
+
+
