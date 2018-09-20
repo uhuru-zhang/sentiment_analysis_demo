@@ -11,5 +11,7 @@ urlpatterns = [
     # 例如 crawler/_get_news_content/北马 咸猪手?group_id=6601999400229143054&item_id=6601999400229143054$comment_num=1000
     url(r'_get_news_content/(?P<keyword>.*)$',views.get_news_content),
     # 例如 crawler/main/北马 咸猪手
-    url(r'main/(?P<keyword>.*)/(?P<news_count>\d*)$',views.crawler_main)
+    url(r'main/(?P<keyword>.*)/(?P<news_count>\d*)$',views.crawler_main),
+    # 例如 crawler/heat/北马 咸猪手
+    url(r'heat/(?P<keyword>.*)/$',views.event_heat)
 ]

@@ -100,3 +100,22 @@ def crawler_main(request,keyword,news_count=30,thread_num=50,comment_count=1000)
 		print (index,addr[0])
 
 	return HttpResponse(wb_data,content_type="application/json")
+
+
+def event_heat(request,keyword):
+	sql = 'select review.series_id,review.content,review.upvote_num \
+	       from keyword,review \
+		   where keyword.content="{keyword}" and \
+		         keyword.object_id=review.object_id;'.format(keyword=keyword)
+	comments = article_sql.execute_sql(sql)
+	heat_num = 0
+	for comment in comments:
+		heat_num += comment.upvote_num + 2
+	return HttpResponse(heat_num)
+
+def heat_by_day(request,keyword,day):
+	sql = 'select review.series_id,count(review.content) \
+	       from keyword,review \
+		   where keyword.content="{keyword}" and \
+		         keyword.object_id=review.object_id;'.format(keyword=keyword)
+	comments = article_sql.execute_sql(sql)

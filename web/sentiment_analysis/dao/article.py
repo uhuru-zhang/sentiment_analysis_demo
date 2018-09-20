@@ -4,6 +4,8 @@ import uuid
 from ..const import object_type_dict
 from ..models import Article, Review, Keyword
 
+from django.db import connection
+
 
 def query_articles(filters, limit=(0, 100)):
     raw_query = """
@@ -85,3 +87,10 @@ def query_keyword_by_content(content):
 
     print(raw_query)
     return Keyword.objects.raw(raw_query=raw_query)
+
+
+def execute_sql(sql):
+    """
+    执行原生SQL
+    """
+    return Keyword.objects.raw(raw_query=sql)
