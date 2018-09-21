@@ -43,11 +43,13 @@ url: `{host}/algorithm/hot_words/{keyword}/`
 
 args:
 
-- method: TDIDF或TextRank
+- method: TDIDF或TextRank，默认为TDIDF
 - topk: 默认为10
+- source: 用于获取关键词的文本，取值是comment、article、all，默认值的all
 
 返回：
 
 - keyword: 事件的关键词
 - count: 热词的数量
 - hot_words: 列表，每一项的格式为 (word, weight)
+

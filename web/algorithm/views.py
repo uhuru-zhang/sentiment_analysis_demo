@@ -4,7 +4,9 @@ import json
 from django.http import HttpResponse
 
 from sentiment_analysis.dao import article as article_sql
+
 from .analysis.keyword_extract import keyword_by_TFIDF,keyword_by_textRank
+from .analysis.load_data import load_articles_by_keyword,load_comments_by_keyword
 
 
 def event_heat(request,keyword):
@@ -47,30 +49,47 @@ def heat_by_day(request,keyword,day):
 
 
 def keywords_from_comment(request,keyword):
-
+	#===============加载参数===================
 	method = request.GET.get('method') # TFIDF、TextRank
+	if method is None:
+		method = 'TFIDF'
+
 	topK = request.GET.get('topK')
 	if topK is None:
 		topK = 10
 	topK = int(topK)
 
-	sql = 'select 1 as series_id,review.content \
-		   from keyword,review \
-		   where keyword.content="{keyword}" and \
-				 keyword.object_id=review.object_id;'.format(keyword=keyword)
-	comments = article_sql.execute_sql(sql)
-	comments = [comment.content for comment in comments]
-	comments = '\n'.join(comments)
+	source = request.GET.get('source')
+	if source is None:
+		source = 'all'
+	#================加载数据===================
+	if source == 'comments':
+		comments = load_comments_by_keyword(article_sql,keyword)
+		text_list = [comment.content for comment in comments]
 
-	if method == 'TFIDF':
-		keywords = keyword_by_TFIDF(comments,topK)
-	elif method == 'TextRank':
-		keywords = keyword_by_textRank(comments,topK)
+	elif source == 'article':
+		articles = load_articles_by_keyword(article_sql,keyword)
+		text_list = [article.document for article in articles]
+
+	elif source == 'all':
+		comments = load_comments_by_keyword(article_sql,keyword)
+		articles = load_articles_by_keyword(article_sql,keyword)
+		text_list = [comment.content for comment in comments] + [article.document for article in articles]
 	else:
 		raise ValueError("Unknown method type!")
 
-	keywords = list(keywords)
+	text = '\n'.join(text_list)
+	#================数据分析===================
+	if method == 'TFIDF':
+		keywords = keyword_by_TFIDF(text,topK)
 
+	elif method == 'TextRank':
+		keywords = keyword_by_textRank(text,topK)
+
+	else:
+		raise ValueError("Unknown method type!")
+	#================返回结果===================
+	keywords = list(keywords)
 	data = {
 		'keyword' : keyword,
 		'count': topK,
