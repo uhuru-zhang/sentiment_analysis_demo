@@ -6,15 +6,14 @@ from django.http import HttpResponse
 from sentiment_analysis.dao import article as article_sql
 
 from .analysis.keyword_extract import keyword_by_TFIDF,keyword_by_textRank
-from .analysis.load_data import load_articles_by_keyword,load_comments_by_keyword
+from .analysis.polarity_analysis import Baidu_NLP,Boson_NLP
+from .analysis.load_data import load_articles_by_keyword,\
+								load_comments_by_keyword,\
+								count_comments_by_day
 
 
 def event_heat(request,keyword):
-	sql = 'select review.series_id,review.upvote_num \
-		   from keyword,review \
-		   where keyword.content="{keyword}" and \
-				 keyword.object_id=review.object_id;'.format(keyword=keyword)
-	comments = article_sql.execute_sql(sql)
+	comments = load_comments_by_keyword(article_sql,keyword)
 	heat_num = 0
 	for comment in comments:
 		heat_num += comment.upvote_num + 2
@@ -28,20 +27,11 @@ def event_heat(request,keyword):
 
 
 def heat_by_day(request,keyword,day):
-	sql = 'select 1 as series_id,\
-		   count(*) as comment_count\
-		   from keyword,review \
-		   where keyword.content="{keyword}" and \
-				 keyword.object_id=review.object_id and\
-				 FROM_UNIXTIME(review.publication_at,\'%%Y-%%m-%%d\')="{day}";'.format(
-				 	keyword=keyword,
-				 	day=day)
-	comment = article_sql.execute_sql(sql)[0]
-	# print (1,comment[0].count)
+	comment_num = count_comments_by_day(keyword,day)
 	
 	data = {
 		'keyword' : keyword,
-		'comment_num': comment.comment_count,
+		'comment_num': comment_num,
 		'day':day
 	}
 	json_ = json.dumps(data,ensure_ascii=False)
@@ -99,5 +89,36 @@ def keywords_from_comment(request,keyword):
 	return HttpResponse(json_,content_type="application/json")
 
 
+def polarity_of_the_event(request,keyword):
+	method = request.GET.get('method') # Baidu、Boson、SELF
+	comment_num = request.GET.get('comment_num') # Baidu、Boson、SELF
+	if method is None:
+		method = 'Baidu'
+	if comment_num is not None:
+		comment_num = int(comment_num)
+	#================加载数据===================
+	comments = load_comments_by_keyword(article_sql,keyword)
+	text_list = [comment.content for comment in comments[:comment_num]]
+	#================数据分析===================
+	if method == 'Boson':
+		nlp_engine = Boson_NLP()
+	elif method == 'Baidu':
+		nlp_engine = Baidu_NLP()
+	elif method == 'SELF':
+		data = {'message' : '尚未实现'}
+		json_ = json.dumps(data,ensure_ascii=False)
+		return HttpResponse(json_,content_type="application/json")
+	else:
+		raise ValueError("Unknown method type!")
+	polarity = nlp_engine.polarity_of_list(text_list)
+	#================返回结果===================
+	data = {
+		'keyword': keyword,
+		'engine':  method,
+		'comment_num': len(text_list),
+		'polarity': polarity
+	}
+	json_ = json.dumps(data,ensure_ascii=False)
+	return HttpResponse(json_,content_type="application/json")
 
 
