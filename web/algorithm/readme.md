@@ -53,9 +53,28 @@ args:
 - count: 热词的数量
 - hot_words: 列表，每一项的格式为 (word, weight)
 
-## 3. 事件情感
+## 3. 情感
 
-通过来衡量事件新闻下评论的情感，进而估计事件对应的情感。具体来说，对于评论集合$C$，它整体的情感属于类别$c$的概率为
+### 3.1 文本情感
+
+**API如下：**
+
+url: `{host}/algorithm/text_polarity/`
+
+args:
+
+- method: 情感分析的引擎，可选值 Baidu（默认值）、Boson、SELF（尚未实现）
+- text: 待分析的文本
+
+返回：
+
+- text
+- engine
+- polarity: 极性，及相应的置信度
+
+### 3.2 事件情感
+
+通过来衡量事件新闻下评论的情感，进而估计事件对应的情感。具体来说，对于评论集合$C$，它整体的情感属于类别$w$的概率为
 $$
 p(w|C)=\frac{\sum_{c\in C} p(w|c)*{\rm confidence}(w|c)}{\sum_{c\in C}{\rm confidence}(w|c)}
 $$

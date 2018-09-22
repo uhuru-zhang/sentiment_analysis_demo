@@ -12,6 +12,12 @@ from .analysis.load_data import load_articles_by_keyword,\
 								count_comments_by_day
 
 
+
+def json_response(data):
+	json_ = json.dumps(data,ensure_ascii=False)
+	return HttpResponse(json_,content_type="application/json")
+
+
 def event_heat(request,keyword):
 	comments = load_comments_by_keyword(article_sql,keyword)
 	heat_num = 0
@@ -22,8 +28,7 @@ def event_heat(request,keyword):
 		'keyword': keyword,
 		'heat_num':heat_num,
 	}
-	json_ = json.dumps(data,ensure_ascii=False)
-	return HttpResponse(json_,content_type="application/json")
+	return json_response(data)
 
 
 def heat_by_day(request,keyword,day):
@@ -34,8 +39,7 @@ def heat_by_day(request,keyword,day):
 		'comment_num': comment_num,
 		'day':day
 	}
-	json_ = json.dumps(data,ensure_ascii=False)
-	return HttpResponse(json_,content_type="application/json")
+	return json_response(data)
 
 
 def keywords_from_comment(request,keyword):
@@ -85,8 +89,7 @@ def keywords_from_comment(request,keyword):
 		'count': topK,
 		'hot_words': keywords,
 	}
-	json_ = json.dumps(data,ensure_ascii=False)
-	return HttpResponse(json_,content_type="application/json")
+	return json_response(data)
 
 
 def polarity_of_the_event(request,keyword):
@@ -105,9 +108,7 @@ def polarity_of_the_event(request,keyword):
 	elif method == 'Baidu':
 		nlp_engine = Baidu_NLP()
 	elif method == 'SELF':
-		data = {'message' : '尚未实现'}
-		json_ = json.dumps(data,ensure_ascii=False)
-		return HttpResponse(json_,content_type="application/json")
+		return json_response({'message' : '尚未实现'})
 	else:
 		raise ValueError("Unknown method type!")
 	polarity = nlp_engine.polarity_of_list(text_list)
@@ -118,7 +119,31 @@ def polarity_of_the_event(request,keyword):
 		'comment_num': len(text_list),
 		'polarity': polarity
 	}
-	json_ = json.dumps(data,ensure_ascii=False)
-	return HttpResponse(json_,content_type="application/json")
+	return json_response(data)
 
+
+def polarity_of_text(request):
+	text   = request.GET.get('text')
+	method = request.GET.get('method')
+	if text is None:
+		return json_response({'message' : '文本为空'})
+	if method  is None:
+		method = 'Baidu'
+	#================数据分析===================
+	if method == 'Boson':
+		nlp_engine = Boson_NLP()
+	elif method == 'Baidu':
+		nlp_engine = Baidu_NLP()
+	elif method == 'SELF':
+		return json_response({'message' : '尚未实现'})
+	else:
+		raise ValueError("Unknown method type!")
+	polarity = nlp_engine.polarity_of_text(text)
+	#================返回结果===================
+	data = {
+		'text': text,
+		'engine':  method,
+		'polarity': polarity
+	}
+	return json_response(data)
 

@@ -11,5 +11,7 @@ urlpatterns = [
     # 例如 algorithm/hot_words/北马 咸猪手/
     url(r'hot_words/(?P<keyword>.*)/$',views.keywords_from_comment),
     # 例如 algorithm/polarity/北马 咸猪手/
-    url(r'polarity/(?P<keyword>.*)/$',views.polarity_of_the_event)
+    url(r'polarity/(?P<keyword>.*)/$',views.polarity_of_the_event),
+    # 例如 algorithm/text_polarity/
+    url(r'text_polarity/$',views.polarity_of_text),
 ]
