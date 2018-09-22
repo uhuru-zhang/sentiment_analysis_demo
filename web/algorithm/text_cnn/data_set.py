@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 from pandas._libs import json
 from torch.utils.data import Dataset
-from collections import Counter
 
 
 class TextDataSet(Dataset):

@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import torch.utils.data as D
 from pandas._libs import json
 
-from .data_set import TextDataSet
+from web.algorithm.text_cnn.data_set import TextDataSet
 
 """
 文本分类 https://arxiv.org/pdf/1510.03820.pdf
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     train_loader = D.DataLoader(TextDataSet(train=True, usecols=["dish_taste", "content", "id"]), batch_size=256,
                                 shuffle=True, num_workers=32)
 
-    test_loader = D.DataLoader(TextDataSet(train=True, usecols=["dish_taste", "content", "id"]), batch_size=64,
+    test_loader = D.DataLoader(TextDataSet(train=True, usecols=["dish_taste", "content", "id"]), batch_size=256,
                                shuffle=True, num_workers=32)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -87,8 +87,8 @@ if __name__ == '__main__':
             content_indexes_padding = [content_index + (max_len - len(content_index)) * [0] for content_index in
                                        content_indexes]
 
-            data = torch.Tensor(content_indexes_padding, dtype=torch.long).to(device)
-            target = dish_tastes.to(device)
+            data = torch.tensor(content_indexes_padding, dtype=torch.long).to(device)
+            target = torch.tensor([dish_taste + 2 for dish_taste in dish_tastes]).to(device)
 
             optimizer.zero_grad()
             output = model(data)
@@ -116,8 +116,8 @@ if __name__ == '__main__':
                 content_indexes_padding = [content_index + (max_len - len(content_index)) * [0] for content_index in
                                            content_indexes]
 
-                data = torch.Tensor(content_indexes_padding, dtype=torch.long).to(device)
-                target = dish_tastes.to(device)
+                data = torch.tensor(content_indexes_padding, dtype=torch.long).to(device)
+                target = torch.tensor([dish_taste + 2 for dish_taste in dish_tastes]).to(device)
                 output = model(data)
 
                 test_loss += F.nll_loss(input=output, target=target)
