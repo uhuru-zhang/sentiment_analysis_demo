@@ -30,7 +30,7 @@ class TextDataSet(Dataset):
                                  index_col="id",
                                  usecols=usecols
                                  )
-        logging.info("init done! {}".format(len(self.texts)))
+        print("{} init done! {}".format(csv_file, len(self.texts)))
 
     def __getitem__(self, index):
         return {i: self.texts.loc[index, :][i] for i in self.texts.loc[index, :].index}
