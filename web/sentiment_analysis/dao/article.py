@@ -7,18 +7,24 @@ from ..models import Article, Review, Keyword
 from django.db import connection
 
 
-def query_articles(filters, limit=(0, 100)):
+def query_articles(filters, limit=(0, 10)):
     raw_query = """
-        select series_id, title, publication_at, category, source_url, source_type
+        select series_id, title, document, publication_at, category, source_url
         from article 
-        where publication_at between {publication_at}
-          and source_type={source_type}
-          limit {limit}
-    """.format(
-        publication_at=" and ".join(map(str, filters["publication_at"])),
-        source_type=filters["source_type"] if "source_type" in filters else "source_type",
-        limit=", ".join(map(str, filters.get("limit", limit)))
-    )
+        where 
+         {where_clause} 
+        order by series_id
+        limit {limit}
+    """.format(where_clause=" and ".join(
+        filter(lambda item: item is not None, [
+            '1=1',
+            "title like '%%{}%%'".format(filters["title"]) if filters["title"] is not None else None,
+
+            "publication_at between {}".format(" and ".join(
+                map(str, filters["publication_at"]))) if filters["publication_at"][0] is not None else None,
+
+            "category='{}'".format(filters["category"]) if filters["category"] is not None else None,
+        ])), limit=", ".join(map(str, filters.get("limit", limit))))
 
     print(raw_query)
     return Article.objects.raw(raw_query=raw_query)
@@ -84,7 +90,7 @@ def query_keyword_by_content(content):
         from keyword 
         where content='{content}'
     """.format(content=content)
-    
+
     return Keyword.objects.raw(raw_query=raw_query)
 
 

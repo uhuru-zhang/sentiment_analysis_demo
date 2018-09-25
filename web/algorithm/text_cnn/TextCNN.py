@@ -25,7 +25,7 @@ kernel_sizes = [1, 2, 3, 4]
 
 
 class TextCNN(nn.Module):
-    def __init__(self, channel_size=1):
+    def __init__(self, channel_size=1, dropout_ratio=0.5):
         """
         :param vocabulary_size: 字典大小
         :param embedding_dim: 词语维度
@@ -38,8 +38,6 @@ class TextCNN(nn.Module):
         super(TextCNN, self).__init__()
 
         self.embedding = nn.Embedding(vocabulary_size, embedding_dim)
-        # self.conv1 = nn.ModuleList(
-        #     [nn.Conv2d(channel_size, kernel_num, (kernel_size, embedding_dim)) for kernel_size in kernel_sizes])
 
         self.convs = nn.ModuleList([nn.Sequential(
             nn.Conv2d(in_channels=channel_size,
@@ -48,11 +46,11 @@ class TextCNN(nn.Module):
             nn.BatchNorm2d(kernel_num),
             nn.ReLU(inplace=True),
 
-            nn.Conv2d(in_channels=kernel_num,
-                      out_channels=kernel_num,
-                      kernel_size=(kernel_size, 1)),
-            nn.BatchNorm2d(kernel_num),
-            nn.ReLU(inplace=True),
+            # nn.Conv2d(in_channels=kernel_num,
+            #           out_channels=kernel_num,
+            #           kernel_size=(kernel_size, 1)),
+            # nn.BatchNorm2d(kernel_num),
+            # nn.ReLU(inplace=True),
         )
             for kernel_size in kernel_sizes])
 
@@ -60,18 +58,22 @@ class TextCNN(nn.Module):
             nn.Linear(kernel_num * len(kernel_sizes), 100),
             nn.BatchNorm1d(num_features=100),
             nn.ReLU(inplace=True),
+            nn.Dropout(dropout_ratio),
 
             nn.Linear(100, 100),
             nn.BatchNorm1d(num_features=100),
             nn.ReLU(inplace=True),
+            nn.Dropout(dropout_ratio),
 
             nn.Linear(100, 100),
             nn.BatchNorm1d(num_features=100),
             nn.ReLU(inplace=True),
+            nn.Dropout(dropout_ratio),
 
             nn.Linear(100, 100),
             nn.BatchNorm1d(num_features=100),
             nn.ReLU(inplace=True),
+            nn.Dropout(dropout_ratio),
 
             nn.Linear(100, class_num),
             nn.BatchNorm1d(num_features=class_num),
@@ -92,11 +94,11 @@ class TextCNN(nn.Module):
 
 
 if __name__ == '__main__':
-    train_loader = D.DataLoader(TextDataSet(train=True, usecols=["dish_taste", "content", "id"]),
+    train_loader = D.DataLoader(TextDataSet(train=True, usecols=["environment_cleaness", "content", "id"]),
                                 batch_size=256,
                                 shuffle=True, num_workers=32)
 
-    test_loader = D.DataLoader(TextDataSet(train=False, usecols=["dish_taste", "content", "id"]),
+    test_loader = D.DataLoader(TextDataSet(train=False, usecols=["environment_cleaness", "content", "id"]),
                                batch_size=256,
                                shuffle=True, num_workers=32)
 
@@ -114,7 +116,7 @@ if __name__ == '__main__':
     for epoch in range(1, 100):
 
         for batch_index, line in enumerate(train_loader):
-            contents, dish_tastes = line["content"], line["dish_taste"]
+            contents, environment_cleanesss = line["content"], line["environment_cleaness"]
 
             content_indexes = [[character_index_dict[c] for c in content] for content in contents]
 
@@ -124,7 +126,8 @@ if __name__ == '__main__':
                                        content_indexes]
 
             data = torch.tensor(content_indexes_padding, dtype=torch.long).to(device)
-            target = torch.tensor([dish_taste + 2 for dish_taste in dish_tastes]).to(device)
+            target = torch.tensor([environment_cleaness + 2 for environment_cleaness in
+                                   environment_cleanesss]).to(device)
 
             optimizer.zero_grad()
             output = model(data)
@@ -150,9 +153,11 @@ if __name__ == '__main__':
             test_loss = 0
             correct = 0
             result = Counter()
+            types = Counter()
+            pred_types = Counter()
 
             for batch_index, line in enumerate(test_loader):
-                contents, dish_tastes = line["content"], line["dish_taste"]
+                contents, environment_cleanesss = line["content"], line["environment_cleaness"]
 
                 content_indexes = [[character_index_dict[c] for c in content if c in character_index_dict] for content
                                    in contents]
@@ -163,7 +168,8 @@ if __name__ == '__main__':
                                            content_indexes]
 
                 data = torch.tensor(content_indexes_padding, dtype=torch.long).to(device)
-                target = torch.tensor([dish_taste + 2 for dish_taste in dish_tastes]).to(device)
+                target = torch.tensor([environment_cleaness + 2 for environment_cleaness in
+                                       environment_cleanesss]).to(device)
                 output = model(data)
 
                 test_loss += F.nll_loss(input=output, target=target)
@@ -182,13 +188,20 @@ if __name__ == '__main__':
                     result["TF_{}".format(i)] += sum(
                         [1 for _ in filter(lambda items: items[0] != i and items[1] != i, pred_target_tuple)])
 
+                    types[i] += sum([1 for _ in filter(lambda items: items[1] == i, pred_target_tuple)])
+                    pred_types[i] += sum([1 for _ in filter(lambda items: items[0] == items[1], pred_target_tuple)])
+
             F1 = []
             for i in range(class_num):
-                precision = result["TP_{}".format(i)] / (result["TP_{}".format(i)] + result["FP_{}".format(i)])
-                recall = result["TP_{}".format(i)] / (result["TP_{}".format(i)] + result["FN_{}".format(i)])
-
-                F1.append(2 * (precision * recall) / (precision + recall))
-            F1_ave = sum(F1) / class_num
+                try:
+                    precision = result["TP_{}".format(i)] / (result["TP_{}".format(i)] + result["FP_{}".format(i)])
+                    recall = result["TP_{}".format(i)] / (result["TP_{}".format(i)] + result["FN_{}".format(i)])
+                    F1.append((i, 2 * (precision * recall) / (precision + recall)))
+                except:
+                    print(pred_types)
+                    print(types)
+                    print(result)
+            F1_ave = sum(map(lambda items: items[1], F1)) / len(F1)
 
             test_loss /= len(test_loader.dataset)
 
