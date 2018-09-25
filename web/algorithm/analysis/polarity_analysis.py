@@ -1,4 +1,13 @@
+"""
+语知科技			http://yuzhinlp.com/index.html
+玻森NLP			https://bosonnlp.com/
+百度AI开放平台	http://ai.baidu.com/tech/nlp 
+				https://github.com/baidu/Senta
+LTP				http://ltp.ai/demo.html
+"""
+
 import re
+import jieba
 
 from aip import AipNlp
 from bosonnlp import BosonNLP
@@ -72,12 +81,17 @@ class Boson_NLP:
 		return positive_rate/len_
 
 
-if __name__=='__main__':
-	c = ['家产充公，重判，正我国威',
-		'必须封杀这类人，罚他个倾家荡产',
-		'洗钱抓起来，判刑二十年。',
-		'这人真坏。','']
+class SELF_NLP:
 
-	bnlp = Baidu_NLP()
-	result = bnlp.polarity_of_list(c)
+	def __init__(self):
+		pass
+
+	def test(self,text):
+		pass
+
+if __name__=='__main__':
+	text = "情感字典"
+
+	bnlp = SELF_NLP()
+	result = bnlp.test(c)
 	print (result)
